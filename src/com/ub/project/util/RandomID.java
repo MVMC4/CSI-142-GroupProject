@@ -6,7 +6,6 @@ public class IdGenerator {
     private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final Random random = new Random();
     
-    // Short ID
     public static String generateShortId(int length) {
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
@@ -15,12 +14,10 @@ public class IdGenerator {
         return sb.toString();
     }
     
-    // UUID
     public static String generateUUID() {
         return UUID.randomUUID().toString();
     }
     
-    // Numeric ID
     public static long generateNumericId(int digits) {
         return (long) (Math.random() * Math.pow(10, digits));
     }
