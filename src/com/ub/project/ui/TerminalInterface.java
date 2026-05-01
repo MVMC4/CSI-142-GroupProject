@@ -1,13 +1,16 @@
 package com.ub.project.ui;
 
-import com.ub.project.util.UniqueId;
-import com.ub.project.disasters.AbstractDisaster;
 import com.ub.project.disasters.Disaster;
-import com.ub.project.disasters.types.*;
+import com.ub.project.disasters.types.Flood;
+import com.ub.project.disasters.types.MedicalIncident;
+import com.ub.project.disasters.types.WildFire;
 import com.ub.project.dispatch.Dispatch;
-import com.ub.project.store.DataStore;
 import com.ub.project.responders.Responder;
-import com.ub.project.responders.units.*; 
+import com.ub.project.responders.units.Ambulance; 
+import com.ub.project.responders.units.FireTruck;
+import com.ub.project.responders.units.Helicopter;
+import com.ub.project.store.DataStore;
+import com.ub.project.util.UniqueId;
 
 public class TerminalInterface {
     private InputReader reader = new InputReader();
@@ -17,7 +20,7 @@ public class TerminalInterface {
 
     public TerminalInterface(DataStore store) {
         this.store = store;
-        this.dispatch = new Dispatch(store); // Initialize dispatcher with the store
+       // this.dispatch = new Dispatch(store); // Initialize dispatcher with the store
     }
 
     public void start() {
@@ -78,7 +81,7 @@ public class TerminalInterface {
             System.out.println("No incidents to handle.");
         } else {
             for (Disaster disaster : store.getDisasters()) {
-                dispatch.handleDisaster((AbstractDisaster) disaster);
+                //dispatch.handleDisaster((AbstractDisaster) disaster);
             }
         }
 
