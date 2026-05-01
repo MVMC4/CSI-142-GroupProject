@@ -1,4 +1,4 @@
-package com.ub.project.responders;
+package com.ub.project.responders.units;
 
 public enum ResponderStatus {
     IDLE,

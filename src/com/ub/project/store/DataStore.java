@@ -1,46 +1,41 @@
 package com.ub.project.store;
 
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ub.project.disasters.Disaster;
+import com.ub.project.responders.Responder;
+import com.ub.project.util.Logging;
 
 public class DataStore {
-    
-    private static DataStore instance;
-    private Map<String, Object> storage;
 
-    private DataStore() {
-        storage = new HashMap<>();
-        loadInitialData();
+    private List<Disaster> disastersList;
+    private List<Responder> respondersList;
+    private static final Logging logs = new Logging();
+
+    public DataStore() {
+        this.disastersList = new ArrayList<>();
+        this.respondersList = new ArrayList<>();
     }
 
-    public static synchronized DataStore getInstance() {
-        if (instance == null) {
-            instance = new DataStore();
-        }
-        return instance;
+  
+    public void addDisaster(Disaster disaster) {
+        disastersList.add(disaster);
+        logs.postDebug("Disaster Stored");
     }
 
-    public void put(String id, Object data) {
-        storage.put(id, data);
+    public void addResponder(Responder responder) {
+        respondersList.add(responder);
+        logs.postDebug("Responder Stored");
     }
 
-    public Object get(String id) {
-        return storage.get(id);
+    public List<Disaster> getDisasters() {
+        return disastersList;
     }
 
-    public void delete(String id) {
-        storage.remove(id);
+    public List<Responder> getResponders() {
+        return respondersList;
     }
 
-    public List<Object> getAll() {
-        return new ArrayList<>(storage.values());
-    }
-
-    private void loadInitialData() {
-        System.out.println("DataStore initialized successfully.");
-    }
-
-    public void clear() {
-        storage.clear();
-    }
+  
 }
