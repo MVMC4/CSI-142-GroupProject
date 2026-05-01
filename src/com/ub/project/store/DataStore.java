@@ -3,7 +3,7 @@ package com.ub.project.store;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ub.project.disasters.Disaster;
+import com.ub.project.disasters.*;
 import com.ub.project.responders.Responder;
 import com.ub.project.util.Logging;
 
@@ -18,7 +18,6 @@ public class DataStore {
         this.respondersList = new ArrayList<>();
     }
 
-  
     public void addDisaster(Disaster disaster) {
         disastersList.add(disaster);
         logs.postDebug("Disaster Stored");
@@ -37,5 +36,23 @@ public class DataStore {
         return respondersList;
     }
 
-  
+
+
+    public Disaster findDisasterById(String id) {
+        for (Disaster d : disastersList) {
+            if (d.getId().equals(id)) {
+                return d;
+            }
+        }
+        return null;
+    }
+
+    public Responder findResponderByName(String name) {
+        for (Responder r : respondersList) {
+            if (r.getName().equals(name)) {
+                return r;
+            }
+        }
+        return null;
+    }
 }
