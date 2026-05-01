@@ -1,11 +1,5 @@
 package com.ub.project.dispatch;
 
-import com.ub.project.disasters.AbstractDisaster;
-import com.ub.project.disasters.DisasterStatus;
-import com.ub.project.responders.Responder;
-import com.ub.project.store.DataStore;
-import com.ub.project.util.Logging;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -15,12 +9,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ub.project.disasters.Disaster;
+import com.ub.project.disasters.DisasterStatus;
+import com.ub.project.responders.Responder;
+import com.ub.project.store.DataStore;
+import com.ub.project.util.Logging;
+
 /**
  * Coordinates the assignment of responder units and resources to an active
  * disaster incident, and tracks the full lifecycle of that response.
  *
  * @author CSI-142 Group Project Team
- * @version 1.1
+ * @version 1.2
  */
 public class Dispatch {
 
@@ -33,8 +33,10 @@ public class Dispatch {
     private static final DateTimeFormatter DISPLAY_FMT =
             DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-    private static final Logging logs   = new Logging();
-    private static final DataStore store = DataStore.getInstance();
+    private static final Logging logs = new Logging();
+    
+    // Dependency injected DataStore instead of static Singleton
+    private DataStore store;
 
     private String dispatchId;
     private String incidentId;
@@ -45,8 +47,10 @@ public class Dispatch {
     private DispatchPriority priority;
     private List<String> activityLog;
 
-    /** Creates an empty PENDING dispatch; populate fields via setters before dispatching. */
-    public Dispatch() {
+    /** Creates an empty PENDING dispatch requiring a DataStore. */
+    public Dispatch(DataStore store) {
+        if (store == null) throw new IllegalArgumentException("DataStore cannot be null.");
+        this.store = store;
         this.assignedResponderIds = new ArrayList<>();
         this.allocatedResourceIds = new ArrayList<>();
         this.activityLog          = new ArrayList<>();
@@ -60,10 +64,10 @@ public class Dispatch {
      *
      * @throws IllegalArgumentException if dispatchId or incidentId is null/blank
      */
-    public Dispatch(String dispatchId, String incidentId,
+    public Dispatch(DataStore store, String dispatchId, String incidentId,
                     List<String> responderIds, List<String> resourceIds,
                     DispatchPriority priority) {
-        this();
+        this(store);
 
         if (dispatchId == null || dispatchId.isBlank())
             throw new IllegalArgumentException("Dispatch ID must not be null or blank.");
@@ -85,8 +89,7 @@ public class Dispatch {
 
     /**
      * Validates and executes the dispatch: sends each available responder to the
-     * incident location, updates the incident status based on type coverage, and
-     * persists this record in the DataStore.
+     * incident location, updates the incident status based on type coverage.
      *
      * @return true if the dispatch succeeded, false if validation failed
      */
@@ -104,7 +107,7 @@ public class Dispatch {
             return false;
         }
 
-        AbstractDisaster incident = (AbstractDisaster) store.get(incidentId);
+        Disaster incident = getDisasterById(incidentId);
         String location = incident.getLocation();
         List<String> requiredTypes = incident.getRequiredResponderTypes();
 
@@ -112,9 +115,10 @@ public class Dispatch {
         Set<String> coveredTypes = new HashSet<>();
 
         for (String responderId : assignedResponderIds) {
-            Object raw = store.get(responderId);
-            if (!(raw instanceof Responder responder)) {
-                logs.postWarning("Responder '" + responderId + "' not found — skipping.");
+            Responder responder = getResponderById(responderId);
+            
+            if (responder == null) {
+                logs.postWarning("Responder '" + responderId + "' not found in DataStore — skipping.");
                 continue;
             }
             if (!responder.isAvailable()) {
@@ -145,8 +149,7 @@ public class Dispatch {
 
         status = DispatchStatus.DISPATCHED;
         logActivity("Dispatch status set to DISPATCHED");
-        store.put(dispatchId, this);
-        logs.postUpdate(this, "Dispatch " + dispatchId + " committed to DataStore.");
+        logs.postUpdate(this, "Dispatch " + dispatchId + " executed successfully.");
 
         return true;
     }
@@ -209,8 +212,9 @@ public class Dispatch {
             return false;
         }
 
-        Object raw = store.get(incidentId);
-        if (!(raw instanceof AbstractDisaster incident)) {
+        Disaster incident = getDisasterById(incidentId);
+        
+        if (incident == null) {
             logs.postError("Validation failed [" + dispatchId + "]: incident '"
                     + incidentId + "' not found in DataStore.");
             return false;
@@ -225,8 +229,8 @@ public class Dispatch {
 
         boolean allAvailable = true;
         for (String id : assignedResponderIds) {
-            Object respRaw = store.get(id);
-            if (!(respRaw instanceof Responder responder)) {
+            Responder responder = getResponderById(id);
+            if (responder == null) {
                 logs.postWarning("Validation [" + dispatchId + "]: responder '"
                         + id + "' not found in DataStore.");
                 allAvailable = false;
@@ -307,13 +311,31 @@ public class Dispatch {
 
     private void releaseResponders() {
         for (String id : assignedResponderIds) {
-            Object raw = store.get(id);
-            if (raw instanceof Responder responder) {
+            Responder responder = getResponderById(id);
+            if (responder != null) {
                 responder.completeTask();
                 logActivity("Responder " + responder.getName() + " released → IDLE");
             }
         }
     }
+    
+    // --- DataStore Lookup Helpers ---
+
+    private Disaster getDisasterById(String id) {
+        for (Disaster d : store.getDisasters()) {
+            if (d.getId().equals(id)) return d;
+        }
+        return null;
+    }
+
+    private Responder getResponderById(String id) {
+        for (Responder r : store.getResponders()) {
+            if (r.getId().equals(id)) return r;
+        }
+        return null;
+    }
+
+    // --------------------------------
 
     private void logActivity(String message) {
         activityLog.add("[" + LocalDateTime.now().format(DISPLAY_FMT) + "] " + message);
