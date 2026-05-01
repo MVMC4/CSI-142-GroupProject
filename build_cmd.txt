@@ -1,0 +1,42 @@
+C:\Users\mooke\Desktop\Projects\CSI-142-GroupProject (refector/fixes -> origin)                                                                                                                                                               
+λ javac -d out src/com/ub/project/app/*.java src/com/ub/project/disasters/*.java src/com/ub/project/disasters/types/*.java src/com/ub/project/dispatch/*.java src/com/ub/project/responders/*.java src/com/ub/project/responders/units/*.java 
+src/com/ub/project/store/*.java src/com/ub/project/ui/*.java src/com/ub/project/util/*.java                                                                                                                                                   
+                                                                                                                                                                                                                                              
+C:\Users\mooke\Desktop\Projects\CSI-142-GroupProject (refector/fixes -> origin)                                                                                                                                                               
+λ java -cp out com.ub.project.app.Demo                                                                                                                                                                                                        
+--- DISASTER RESPONSE CONSOLE ONLINE ---                                                                                                                                                                                                      
+01-05-2026 23:03:56 [UPDATE]: New Responder: [HELICOPTER] ID: Rescue-Alpha has joined the disaster-response.                                                                                                                                  
+01-05-2026 23:03:56 [UPDATE]: New Responder: [HELICOPTER] ID: Rescue-Bravo has joined the disaster-response.                                                                                                                                  
+01-05-2026 23:03:56 [UPDATE]: New Responder: [FIRE_TRUCK] ID: Engine-42 has joined the disaster-response.                                                                                                                                     
+01-05-2026 23:03:57 [UPDATE]: New Responder: [AMBULANCE] ID: Medic-1 has joined the disaster-response.                                                                                                                                        
+01-05-2026 23:03:57 [DEBUG]: Responder Stored                                                                                                                                                                                                 
+01-05-2026 23:03:57 [DEBUG]: Responder Stored                                                                                                                                                                                                 
+01-05-2026 23:03:57 [DEBUG]: Responder Stored                                                                                                                                                                                                 
+01-05-2026 23:03:57 [DEBUG]: Responder Stored                                                                                                                                                                                                 
+01-05-2026 23:03:57 [UPDATE]: Available Units: 4                                                                                                                                                                                              
+                                                                                                                                                                                                                                              
+--- ADDING DISASTERS ---                                                                                                                                                                                                                      
+01-05-2026 23:03:57 [UPDATE]: New Flood reported at Brooklyn (ID: F-101) | Severity: 3/5                                                                                                                                                      
+01-05-2026 23:03:57 [DEBUG]: Disaster Stored                                                                                                                                                                                                  
+01-05-2026 23:03:57 [UPDATE]: New WildFire reported at Pine Ridge (ID: WF-202) | Severity: 5/5                                                                                                                                                
+01-05-2026 23:03:57 [DEBUG]: Disaster Stored                                                                                                                                                                                                  
+01-05-2026 23:03:57 [UPDATE]: New MedicalIncident reported at 5th Avenue (ID: MI-303) | Severity: 2/5                                                                                                                                         
+01-05-2026 23:03:57 [DEBUG]: Disaster Stored                                                                                                                                                                                                  
+                                                                                                                                                                                                                                              
+--- CHECKING DISASTERS (PRE-DISPATCH) ---                                                                                                                                                                                                     
+DISASTER [Flood] | ID: F-101 | Loc: Brooklyn | Status: PENDING | Severity: 3/5 | Info: Rising water levels threatening residential areas, aerial rescue required | Needs: [Helicopter]                                                        
+DISASTER [WildFire] | ID: WF-202 | Loc: Pine Ridge | Status: PENDING | Severity: 5/5 | Info: Rapidly spreading fire threatening lives and structures, full emergency response needed | Needs: [FireTruck, Helicopter, Ambulance]              
+DISASTER [MedicalIncident] | ID: MI-303 | Loc: 5th Avenue | Status: PENDING | Severity: 2/5 | Info: Time-critical medical emergency requiring immediate paramedic and transport support | Needs: [Ambulance, Helicopter]                      
+                                                                                                                                                                                                                                              
+C:\Users\mooke\Desktop\Projects\CSI-142-GroupProject (refector/fixes -> origin)                                                                                                                                                               
+λ        
+
+
+
+BUILD: javac -d out src/com/ub/project/app/*.java src/com/ub/project/disasters/*.java src/com/ub/project/disasters/types/*.java src/com/ub/project/dispatch/*.java src/com/ub/project/responders/*.java src/com/ub/project/responders/units/*.java 
+src/com/ub/project/store/*.java src/com/ub/project/ui/*.java src/com/ub/project/util/*.java                                                                                                                                                   
+
+
+RUN: javac -d out src/com/ub/project/app/*.java src/com/ub/project/disasters/*.java src/com/ub/project/disasters/types/*.java src/com/ub/project/dispatch/*.java src/com/ub/project/responders/*.java src/com/ub/project/responders/units/*.java 
+src/com/ub/project/store/*.java src/com/ub/project/ui/*.java src/com/ub/project/util/*.java                                                                                                                                                   
+    
